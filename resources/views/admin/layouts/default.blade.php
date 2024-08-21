@@ -20,6 +20,7 @@
     <meta name='csrf-token' content="{{ csrf_token() }}" />
 
     @stack('style')
+    @vite(['resources/js/app.js'])
 </head>
 
 

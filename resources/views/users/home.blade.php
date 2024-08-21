@@ -18,7 +18,9 @@
                 @foreach($products as $key => $value)
                     <a href="{{ route('users.detailProduct') }}?idProduct={{ $value->id }}" class="col-md-4 px-5">
                         <div class="text-center mb-10 mb-md-0">
-                            <img src="{{ asset($value->images[0]->image_url ) }}" class="mh-125px mb-9" alt="" />
+                            @if(count($value->images) != 0)
+                                <img src="{{ asset($value->images[0]->image_url ) }}" class="mh-125px mb-9" alt="" />
+                            @endif
                             <div class="d-flex flex-center mb-5">
                                 <div class="fs-5 fs-lg-3 fw-bold text-gray-900">{{  $value->name }}</div>
                             </div>
@@ -53,66 +55,31 @@
                     </div>
                 </div>
                 <div class="d-flex flex-center">
-                    <div class="d-flex flex-wrap flex-center justify-content-lg-between mb-15 mx-auto w-xl-900px">
-                        <div class="d-flex flex-column flex-center h-200px w-200px h-lg-250px w-lg-250px m-3 bgi-no-repeat bgi-position-center bgi-size-contain"
-                            style="background-image: url(asset('assets/media/svg/misc/octagon.svg'))">
-                            <i class="ki-duotone ki-element-11 fs-2tx text-white mb-3">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                <span class="path3"></span>
-                                <span class="path4"></span>
-                            </i>
-                            <div class="mb-0">
-                                <div class="fs-lg-2hx fs-2x fw-bold text-white d-flex flex-center">
-                                    <div class="min-w-70px" data-kt-countup="true" data-kt-countup-value="700"
-                                        data-kt-countup-suffix="+">0</div>
+                    {{-- Chat realtime --}}
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row border">
+                                    <ul id="messages" class="list-unstyled overflow-auto" style="min-height: 45vh; background:white">
+
+                                    </ul>
+                                    <form class="border-top">
+                                        <div class="row py-3">
+                                            <div class="col-10">
+                                                <input type="text" id="message" class="form-control">
+                                            </div>
+                                            <div class="col-2">
+                                                <button id="send" type="submit" class="btn btn-primary w-100">Gửi</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                                <span class="text-gray-600 fw-semibold fs-5 lh-0">Known Companies</span>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column flex-center h-200px w-200px h-lg-250px w-lg-250px m-3 bgi-no-repeat bgi-position-center bgi-size-contain"
-                            style="background-image: url({{ asset('assets/media/svg/misc/octagon.svg') }})">
-                            <i class="ki-duotone ki-chart-pie-4 fs-2tx text-white mb-3">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                <span class="path3"></span>
-                            </i>
-                            <div class="mb-0">
-                                <div class="fs-lg-2hx fs-2x fw-bold text-white d-flex flex-center">
-                                    <div class="min-w-70px" data-kt-countup="true" data-kt-countup-value="80"
-                                        data-kt-countup-suffix="K+">0</div>
-                                </div>
-                                <span class="text-gray-600 fw-semibold fs-5 lh-0">Statistic Reports</span>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column flex-center h-200px w-200px h-lg-250px w-lg-250px m-3 bgi-no-repeat bgi-position-center bgi-size-contain"
-                            style="background-image: url({{ asset('assets/media/svg/misc/octagon.svg') }})">
-                            <i class="ki-duotone ki-basket fs-2tx text-white mb-3">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                <span class="path3"></span>
-                                <span class="path4"></span>
-                            </i>
-                            <div class="mb-0">
-                                <div class="fs-lg-2hx fs-2x fw-bold text-white d-flex flex-center">
-                                    <div class="min-w-70px" data-kt-countup="true" data-kt-countup-value="35"
-                                        data-kt-countup-suffix="M+">0</div>
-                                </div>
-                                <span class="text-gray-600 fw-semibold fs-5 lh-0">Secure Payments</span>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="fs-2 fw-semibold text-muted text-center mb-3">
-                    <span class="fs-1 lh-1 text-gray-700">“</span>When you care about your topic, you’ll write about
-                    it in a
-                    <br />
-                    <span class="text-gray-700 me-1">more powerful</span>, emotionally expressive way
-                    <span class="fs-1 lh-1 text-gray-700">“</span>
-                </div>
-                <div class="fs-2 fw-semibold text-muted text-center">
-                    <a href="account/security.html" class="link-primary fs-4 fw-bold">Marcus Levy,</a>
-                    <span class="fs-4 fw-bold text-gray-600">KeenThemes CEO</span>
+
+                    {{-- Chat realtime --}}
                 </div>
             </div>
         </div>
@@ -716,5 +683,39 @@
 
                 })
         })
+    </script>
+
+
+    <script type="module">
+        let btnSent = document.querySelector("#send")
+        let message = document.querySelector("#message")
+        btnSent.addEventListener('click', function(e) {
+            e.preventDefault();
+            axios.post('{{ route("postMessage") }}', {
+                'message'  : message.value,
+            })
+                .then((data) => {
+                    message.value = ""
+                })
+        })
+
+
+        Echo.private('chat.private.{{ Auth::id() }}.19')
+            .listen('ChatPrivate', e => {
+                console.log(e);
+
+                // let messages = document.querySelector("#messages")
+                // let itemElement = document.createElement("li")
+                // if(e.group.leader == e.user.id){
+                //     itemElement.textContent = `Trưởng nhóm ~ ${e.user.name}: ${e.message}`;
+                // }else{
+                //     itemElement.textContent = `${e.user.name}: ${e.message}`;
+                // }
+
+                // if(e.user.id == "{{ Auth::user()->id }}"){
+                //     itemElement.classList.add("my-message")
+                // }
+                // messages.appendChild(itemElement)
+            })
     </script>
 @endpush

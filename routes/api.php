@@ -10,8 +10,6 @@ use App\Http\Controllers\Api\AuthenController;
 //     return $request->user();
 // });
 
-
-
 Route::post('login', [AuthenController::class, 'postLogin']);
 Route::group(['middleware' => 'auth:sanctum'], function() {
     // http://127.0.0.1:8000/api/list-product

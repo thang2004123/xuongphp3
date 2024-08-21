@@ -13,6 +13,7 @@
 	<link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
     <meta name='csrf-token' content="{{ csrf_token() }}" />
     @stack('styles')
+    @vite(['resources/js/app.js'])
 </head>
 
 <body id="kt_body" data-bs-spy="scroll" data-bs-target="#kt_landing_menu" class="bg-body position-relative app-blank">

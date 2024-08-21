@@ -7,10 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AuthenController extends Controller
 {
     public function postLogin(Request $req){
+        // $validate = Validator::make($req->all(), [
+        //     'email' => 'required',
+        //     'password'  => 'required'
+        // ]);
+        // if ($validate->fails()){
+        //     return response()->json($validate->errors(), 422);
+        // }
+
+
         if (Auth::attempt([
             'email' => $req->email,
             'password' => $req->password,

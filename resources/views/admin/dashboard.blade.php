@@ -22,7 +22,10 @@
 
 
 @push('script')
-    <script>
-
+    <script type="module">
+        Echo.private('chat.private.20.{{ Auth::id() }}')
+            .listen('ChatPrivate', e => {
+                console.log(e);
+            })
     </script>
 @endpush

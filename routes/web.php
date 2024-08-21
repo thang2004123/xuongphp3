@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\AuthenController;
 use App\Http\Controllers\User\ClientController;
+use App\Http\Controllers\ChatController;
 
 Route::get('login', [AuthenController::class, 'login'])->name('login');
 Route::post('login', [AuthenController::class, 'postLogin'])->name('postLogin');
@@ -25,6 +26,9 @@ Route::group([
     // Dashboard
     Route::get('dashboard', [AuthenController::class, 'dashboard'])->name('dashboard');
 
+
+    // Backup
+    Route::get('/back-up',  [AuthenController::class, 'backupDB'])->name('backupDB');
 
     // Nhóm quản lý user
     Route::group([
@@ -100,3 +104,7 @@ Route::group([
 
 
 });
+
+
+
+Route::post('/postMessage', [ChatController::class, 'postMessage'])->name('postMessage');
